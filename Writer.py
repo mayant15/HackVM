@@ -19,29 +19,31 @@ class Writer(object):
         self.__file.close()
 
     def write_init(self) -> None:
-        self.__file.write("\n@256\nD=A\n@SP\nM=D\n")
-        self.write_call("Sys.init", 0)
+        self.__file.write(init)
+
+    def write_end(self) -> None:
+        self.__file.write(end)
 
     def write_comment(self, tokens: List[str]) -> None:
         string = " ".join(tokens)
-        self.__file.write(f'\n// {string}\n')
+        self.__file.write(f'\n; {string}\n')
 
     def write_arithmetic(self, op: str) -> None:
         n = self.__nLine
         n += 1
-        self.__file.write(arithmetic[op].format(n, n, n, n))
+        self.__file.write(arithmetic[op].format(n, n))
         self.__nLine = n
 
-    def write_push(self, segment: str, arg: str) -> None:
+    def write_push(self, segment: str, arg: int) -> None:
         line = ""
         if segment == "pointer":
-            line = push[segment].format("THAT" if int(arg) else "THIS")
+            line = push[segment].format("THAT" if arg else "THIS")
         elif segment == "temp":
-            line = push[segment].format(5 + int(arg))
+            line = push[segment].format(5 + arg)
         elif segment == "static":
             line = push[segment].format(self.__currentName, arg)
         else:
-            line = push[segment].format(arg)
+            line = push[segment].format(hex(arg))
         self.__file.write(line)
 
     def write_pop(self, segment: str, arg: str) -> None:

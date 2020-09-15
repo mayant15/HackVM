@@ -8,3 +8,6 @@ python ./VMTranslator.py <input>
 ```
 
 As part of the VM specification, the `<input>` could be a single `.vm` file or a directory with multiple VM files combined to a single assembly file.
+
+## Tests
+The VM files in `tests/` are from the nand2tetris course and can be used to check if the translations are working.

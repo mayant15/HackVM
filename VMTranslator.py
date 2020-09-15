@@ -24,9 +24,9 @@ def main(argv: List[str]) -> None:
             if str(abspath).endswith(".vm"):
                 files.append(abspath)
         name = os.path.join(path, os.path.basename(path) + '.asm')
-        print(name)
         writer = Writer(name)
-        writer.write_init()
+
+    writer.write_init()
 
     for f in files:
         handle = open(f, "r")
@@ -46,18 +46,20 @@ def main(argv: List[str]) -> None:
 
             # Write the actual translated command
             if   t == C_ARITHMETIC: writer.write_arithmetic(tokens[0])
-            elif t == C_PUSH:       writer.write_push(tokens[1], tokens[2])
+            elif t == C_PUSH:       writer.write_push(tokens[1], int(tokens[2]))
             elif t == C_POP:        writer.write_pop(tokens[1], tokens[2])
-            elif t == C_LABEL:      writer.write_label(tokens[1])
-            elif t == C_GOTO:       writer.write_goto(tokens[1])
-            elif t == C_IF:         writer.write_if(tokens[1])
-            elif t == C_FUNCTION:   writer.write_function(tokens[1], int(tokens[2]))
-            elif t == C_RETURN:     writer.write_return()
-            elif t == C_CALL:       writer.write_call(tokens[1], int(tokens[2]))
+            # elif t == C_LABEL:      writer.write_label(tokens[1])
+            # elif t == C_GOTO:       writer.write_goto(tokens[1])
+            # elif t == C_IF:         writer.write_if(tokens[1])
+            # elif t == C_FUNCTION:   writer.write_function(tokens[1], int(tokens[2]))
+            # elif t == C_RETURN:     writer.write_return()
+            # elif t == C_CALL:       writer.write_call(tokens[1], int(tokens[2]))
             else: print('Invalid command')
         
         handle.close()
 
+    
+    writer.write_end()
     writer.close()
 
 
