@@ -37,19 +37,19 @@ class Writer(object):
     def write_push(self, segment: str, arg: int) -> None:
         line = ""
         if segment == "pointer":
-            line = push[segment].format("THAT" if arg else "THIS")
+            line = push[segment].format("that" if arg else "this")
         elif segment == "temp":
             line = push[segment].format(5 + arg)
         elif segment == "static":
             line = push[segment].format(self.__currentName, arg)
         else:
-            line = push[segment].format(hex(arg))
+            line = push[segment].format(arg)
         self.__file.write(line)
 
     def write_pop(self, segment: str, arg: str) -> None:
         line = ""
         if segment == "pointer":
-            line = pop[segment].format("THAT" if int(arg) else "THIS")
+            line = pop[segment].format("that" if int(arg) else "this")
         elif segment == "temp":
             line = pop[segment].format(5 + int(arg))
         elif segment == "static":

@@ -3,6 +3,13 @@
 # TODO: Reorganize?
 
 init = """
+SETION .data
+lcl  db 0
+arg  db 0
+this db 0
+that db 0
+temp db 0
+
 SECTION .text
 global _start
 
@@ -82,39 +89,115 @@ arithmetic = {
         pop ebx
         cmp ebx, eax
         jl lt_{}
-        push 00h
+        push 0
     lt_{}:
-        push FFh
+        push -1
     """,
 }
 
 push = {
-    "constant": "push {}\n",
-    "local"   : "push ...",
-    "argument": "push ...",
-    "this"    : "push ...",
-    "that"    : "push ...",
-    "pointer" : "push ...",
-    "temp"    : "push ...",
-    "static"  : "push ...1"
+    "constant": """
+        push {}
+    """,
+
+    "local"   : """
+        mov eax, lcl
+        add eax, {}
+        push [eax]
+    """,
+    
+    "argument": """
+        mov eax, arg
+        add eax, {}
+        push [eax]
+    """,
+
+    "this": """
+        mov eax, this
+        add eax, {}
+        push [eax]
+    """,
+
+    "that": """
+        mov eax, that
+        add eax, {}
+        push [eax]
+    """,
+
+    "pointer" : """
+        push {}
+    """,
+
+    "temp": """
+        mov eax, temp
+        add eax, {}
+        push [eax]
+    """,
+
+    "static": "..."
 }
 
 pop = {
-    "constant": "pop ...",
-    "local"   : "pop ...",
-    "argument": "pop ...",
-    "this"    : "pop ...",
-    "that"    : "pop ...",
-    "pointer" : "pop ...",
-    "temp"    : "pop ...",
+    "constant": """
+        pop eax
+    """,
+
+    "local": """
+        pop eax
+        mov ebx, lcl
+        add ebx, {}
+        mov [ebx], eax
+    """,
+
+    "argument": """
+        pop eax
+        mov ebx, arg
+        add ebx, {}
+        mov [ebx], eax
+    """,
+
+    "this": """
+        pop eax
+        mov ebx, this
+        add ebx, {}
+        mov [ebx], eax
+    """,
+
+    "that": """
+        pop eax
+        mov ebx, that
+        add ebx, {}
+        mov [ebx], eax
+    """,
+
+    "pointer": """
+        pop eax
+        mov {}, eax
+    """,
+
+    "temp": """
+        pop eax
+        mov ebx, temp
+        add ebx, {}
+        mov [ebx], eax
+    """,
+
     "static"  : "pop ...n"
 }
 
-label = "label"
+label = """
+{}:
+"""
 
-goto = "goto"
+goto = """
+jmp {}
+"""
 
-if_goto = "if_goto"
+if_goto = """
+    pop eax
+    cmp eax, 0
+    jne {}
+"""
 
 call = "call"
 
